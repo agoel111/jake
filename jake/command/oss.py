@@ -74,7 +74,7 @@ class OssCommand(BaseCommand):
             )
 
             oss_index_results: List[OssIndexComponent]
-            oss = OssIndex()
+            oss = OssIndex(enable_cache=False)
             if self.arguments.oss_clear_cache:
                 progress.update(task_query_ossi, completed=1, description='Clearing OSS Index local cache')
                 oss.purge_local_cache()
