@@ -34,6 +34,8 @@ from cyclonedx_py.parser.requirements import RequirementsFileParser
 from cyclonedx_py.parser.requirements import RequirementsParser
 from jake.Utils.swiftpacakge import PackageFileParser
 from jake.Utils.swiftpacakge import PackageParser
+from jake.Utils.swiftpod import PodFileParser
+from jake.Utils.swiftpod import PodParser
 
 def get_parser(input_type: str, input_data_fh: Optional[TextIO]) -> BaseParser:
     if input_type == 'ENV':
@@ -56,6 +58,9 @@ def get_parser(input_type: str, input_data_fh: Optional[TextIO]) -> BaseParser:
         
         if input_type == 'SWIFT':
             return PackageParser(package_content=input_data)
+        
+        if input_type == 'SWIFT_POD':
+            return PodParser(pod_content=input_data)
 
         if input_type == 'PIPENV':
             return PipEnvParser(pipenv_contents=input_data)
@@ -69,7 +74,10 @@ def get_parser(input_type: str, input_data_fh: Optional[TextIO]) -> BaseParser:
             return RequirementsFileParser(requirements_file='requirements.txt')
         
         if input_type == 'SWIFT':
-            return PackageFileParser(package_content='Package.resolved')
+            return PackageFileParser(package_file='Package.resolved')
+        
+        if input_type == 'SWIFT_POD':
+            return PodFileParser(pod_file='Podfile.lock')
         
         if input_type == 'PIPENV':
             return PipEnvFileParser(pipenv_lock_filename='Pipfile.lock')
@@ -109,7 +117,7 @@ def add_parser_selector_arguments(arg_parser: ArgumentParser) -> None:
              'POETRY = read from a poetry.lock. '
              '(Default = ENV)',
         metavar='TYPE',
-        choices={'CONDA', 'CONDA_JSON', 'ENV', 'PIP', 'PIPENV', 'POETRY', 'SWIFT'},
+        choices={'CONDA', 'CONDA_JSON', 'ENV', 'PIP', 'PIPENV', 'POETRY', 'SWIFT', 'SWIFT_POD'},
         default='ENV',
         dest='sbom_input_type'
     )
